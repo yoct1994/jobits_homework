@@ -1,13 +1,16 @@
 com/example/jabits_homework/entity/user/User.java
  com.example.jabits_homework.entity.user.User
  com.example.jabits_homework.entity.user.User$UserBuilder
+com/example/jabits_homework/error/exception/ErrorCode.java
+ com.example.jabits_homework.error.exception.ErrorCode
+com/example/jabits_homework/error/exceptions/BadExRequestException.java
+ com.example.jabits_homework.error.exceptions.BadExRequestException
 com/example/jabits_homework/entity/image/crud_image/repository/CRUDImageRepository.java
  com.example.jabits_homework.entity.image.crud_image.repository.CRUDImageRepository
-com/example/jabits_homework/payload/request/UpdateRequest.java
- com.example.jabits_homework.payload.request.UpdateRequest
- com.example.jabits_homework.payload.request.UpdateRequest$UpdateRequestBuilder
-com/example/jabits_homework/controller/UserController.java
- com.example.jabits_homework.controller.UserController
+com/example/jabits_homework/service/user/UserService.java
+ com.example.jabits_homework.service.user.UserService
+com/example/jabits_homework/controller/CRUDController.java
+ com.example.jabits_homework.controller.CRUDController
 com/example/jabits_homework/payload/request/SignInRequest.java
  com.example.jabits_homework.payload.request.SignInRequest
 com/example/jabits_homework/JabitsHomeworkApplication.java
@@ -20,43 +23,72 @@ com/example/jabits_homework/payload/response/CRUDResponse.java
  com.example.jabits_homework.payload.response.CRUDResponse$CRUDResponseBuilder
 com/example/jabits_homework/entity/crud/repository/CRUDRepository.java
  com.example.jabits_homework.entity.crud.repository.CRUDRepository
+com/example/jabits_homework/error/exceptions/DecodeFailException.java
+ com.example.jabits_homework.error.exceptions.DecodeFailException
 com/example/jabits_homework/controller/AuthController.java
  com.example.jabits_homework.controller.AuthController
 com/example/jabits_homework/jwt/JwtProvider.java
  com.example.jabits_homework.jwt.JwtProvider
+com/example/jabits_homework/error/exceptions/TokenExpiredException.java
+ com.example.jabits_homework.error.exceptions.TokenExpiredException
+com/example/jabits_homework/error/exceptions/InvalidTokenException.java
+ com.example.jabits_homework.error.exceptions.InvalidTokenException
+com/example/jabits_homework/error/exceptions/CRUDNotFoundException.java
+ com.example.jabits_homework.error.exceptions.CRUDNotFoundException
+com/example/jabits_homework/error/exception/BusinessException.java
+ com.example.jabits_homework.error.exception.BusinessException
+com/example/jabits_homework/error/exceptions/RefreshTokenNotFoundException.java
+ com.example.jabits_homework.error.exceptions.RefreshTokenNotFoundException
 com/example/jabits_homework/service/auth/AuthServiceImpl.java
  com.example.jabits_homework.service.auth.AuthServiceImpl
 com/example/jabits_homework/service/crud/CRUDService.java
  com.example.jabits_homework.service.crud.CRUDService
-com/example/jabits_homework/controller/CRUDController.java
- com.example.jabits_homework.controller.CRUDController
+com/example/jabits_homework/service/crud/CRUDServiceImpl.java
+ com.example.jabits_homework.service.crud.CRUDServiceImpl
 com/example/jabits_homework/entity/user/enums/Authority.java
  com.example.jabits_homework.entity.user.enums.Authority
-com/example/jabits_homework/entity/crud/CRUD.java
- com.example.jabits_homework.entity.crud.CRUD
- com.example.jabits_homework.entity.crud.CRUD$CRUDBuilder
+com/example/jabits_homework/error/exceptions/UserNotHaveAuthorityException.java
+ com.example.jabits_homework.error.exceptions.UserNotHaveAuthorityException
+com/example/jabits_homework/controller/UserController.java
+ com.example.jabits_homework.controller.UserController
 com/example/jabits_homework/util/AES256.java
  com.example.jabits_homework.util.AES256
 com/example/jabits_homework/entity/user/repository/UserRepository.java
  com.example.jabits_homework.entity.user.repository.UserRepository
+com/example/jabits_homework/error/exceptions/CRUDImageNotFoundException.java
+ com.example.jabits_homework.error.exceptions.CRUDImageNotFoundException
 com/example/jabits_homework/service/auth/AuthService.java
  com.example.jabits_homework.service.auth.AuthService
 com/example/jabits_homework/payload/request/WriteRequest.java
  com.example.jabits_homework.payload.request.WriteRequest
  com.example.jabits_homework.payload.request.WriteRequest$WriteRequestBuilder
-com/example/jabits_homework/payload/response/TokenResponse.java
- com.example.jabits_homework.payload.response.TokenResponse
- com.example.jabits_homework.payload.response.TokenResponse$TokenResponseBuilder
+com/example/jabits_homework/error/exceptions/LoginFailedException.java
+ com.example.jabits_homework.error.exceptions.LoginFailedException
+com/example/jabits_homework/service/user/UserServiceImpl.java
+ com.example.jabits_homework.service.user.UserServiceImpl
+com/example/jabits_homework/error/exceptions/UserAlreadySignedException.java
+ com.example.jabits_homework.error.exceptions.UserAlreadySignedException
 com/example/jabits_homework/payload/request/SignUpRequest.java
  com.example.jabits_homework.payload.request.SignUpRequest
+com/example/jabits_homework/error/exceptions/IsNotRefreshTokenException.java
+ com.example.jabits_homework.error.exceptions.IsNotRefreshTokenException
 com/example/jabits_homework/entity/token/Token.java
  com.example.jabits_homework.entity.token.Token
  com.example.jabits_homework.entity.token.Token$TokenBuilder
 com/example/jabits_homework/entity/token/repository/TokenRepository.java
  com.example.jabits_homework.entity.token.repository.TokenRepository
-com/example/jabits_homework/service/user/UserServiceImpl.java
- com.example.jabits_homework.service.user.UserServiceImpl
-com/example/jabits_homework/service/user/UserService.java
- com.example.jabits_homework.service.user.UserService
-com/example/jabits_homework/service/crud/CRUDServiceImpl.java
- com.example.jabits_homework.service.crud.CRUDServiceImpl
+com/example/jabits_homework/error/ErrorResponse.java
+ com.example.jabits_homework.error.ErrorResponse
+com/example/jabits_homework/entity/crud/CRUD.java
+ com.example.jabits_homework.entity.crud.CRUD
+ com.example.jabits_homework.entity.crud.CRUD$CRUDBuilder
+com/example/jabits_homework/error/exceptions/UserNotFoundException.java
+ com.example.jabits_homework.error.exceptions.UserNotFoundException
+com/example/jabits_homework/error/BusinessExceptionHandler.java
+ com.example.jabits_homework.error.BusinessExceptionHandler
+com/example/jabits_homework/payload/request/UpdateRequest.java
+ com.example.jabits_homework.payload.request.UpdateRequest
+ com.example.jabits_homework.payload.request.UpdateRequest$UpdateRequestBuilder
+com/example/jabits_homework/payload/response/TokenResponse.java
+ com.example.jabits_homework.payload.response.TokenResponse
+ com.example.jabits_homework.payload.response.TokenResponse$TokenResponseBuilder

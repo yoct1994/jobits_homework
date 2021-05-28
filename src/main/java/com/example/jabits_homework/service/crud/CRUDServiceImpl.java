@@ -83,7 +83,7 @@ public class CRUDServiceImpl implements CRUDService {
     @Override
     public void writeCRUD(String token, WriteRequest writeRequest) {
         User user = userRepository.findByUserId(jwtProvider.getUserId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         if(user.getAuthority() != Authority.ADMIN)
             throw new UserNotHaveAuthorityException();
@@ -186,7 +186,7 @@ public class CRUDServiceImpl implements CRUDService {
                 .orElseThrow(UserNotFoundException::new);
 
         if(user.getAuthority() != Authority.ADMIN)
-            throw new RuntimeException();
+            throw new UserNotHaveAuthorityException();
 
         CRUD crud = crudRepository.findByListId(crudId)
                 .orElseThrow(CRUDNotFoundException::new);
