@@ -4,6 +4,9 @@ import com.example.jabits_homework.entity.token.Token;
 import com.example.jabits_homework.entity.token.repository.TokenRepository;
 import com.example.jabits_homework.entity.user.User;
 import com.example.jabits_homework.entity.user.repository.UserRepository;
+import com.example.jabits_homework.error.exceptions.LoginFailedException;
+import com.example.jabits_homework.error.exceptions.RefreshTokenNotFoundException;
+import com.example.jabits_homework.error.exceptions.TokenExpiredException;
 import com.example.jabits_homework.jwt.JwtProvider;
 import com.example.jabits_homework.payload.request.SignInRequest;
 import com.example.jabits_homework.payload.response.TokenResponse;
@@ -42,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
                             .refreshToken(refreshToken)
                             .build();
                 })
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(LoginFailedException::new);
     }
 
     @Override
@@ -66,6 +69,6 @@ public class AuthServiceImpl implements AuthService {
                             .accessToken(accessToken)
                             .build();
                 })
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(RefreshTokenNotFoundException::new);
     }
 }

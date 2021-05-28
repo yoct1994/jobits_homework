@@ -7,10 +7,12 @@ import com.example.jabits_homework.entity.image.crud_image.repository.CRUDImageR
 import com.example.jabits_homework.entity.user.User;
 import com.example.jabits_homework.entity.user.enums.Authority;
 import com.example.jabits_homework.entity.user.repository.UserRepository;
+import com.example.jabits_homework.error.exceptions.*;
 import com.example.jabits_homework.jwt.JwtProvider;
 import com.example.jabits_homework.payload.request.UpdateRequest;
 import com.example.jabits_homework.payload.request.WriteRequest;
 import com.example.jabits_homework.payload.response.CRUDResponse;
+import javassist.tools.web.BadHttpRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -51,7 +54,7 @@ public class CRUDServiceImpl implements CRUDService {
     @Override
     public List<CRUDResponse> getCRUD(String token, Integer pageNum) {
         userRepository.findByUserId(jwtProvider.getUserId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         List<CRUDResponse> responses = new ArrayList<>();
         Page<CRUD> cruds = crudRepository.findAll(PageRequest.of(
@@ -61,7 +64,7 @@ public class CRUDServiceImpl implements CRUDService {
 
         for(CRUD crud : cruds) {
             CRUDImage crudImage = crudImageRepository.findByListId(crud.getListId())
-                    .orElseThrow(RuntimeException::new);
+                    .orElseThrow(CRUDImageNotFoundException::new);
 
             CRUDResponse crudResponse = CRUDResponse.builder()
                     .listId(crud.getListId())
@@ -83,7 +86,7 @@ public class CRUDServiceImpl implements CRUDService {
                 .orElseThrow(RuntimeException::new);
 
         if(user.getAuthority() != Authority.ADMIN)
-            throw new RuntimeException();
+            throw new UserNotHaveAuthorityException();
 
         CRUD crud = crudRepository.save(
                 CRUD.builder()
@@ -101,13 +104,13 @@ public class CRUDServiceImpl implements CRUDService {
             );
         }else {
             if(writeRequest.getImage().getOriginalFilename() == null || writeRequest.getImage().getOriginalFilename().length() == 0)
-                throw new RuntimeException();
+                throw new BadHttpRequest();
 
             int idx = writeRequest.getImage().getOriginalFilename().indexOf(".");
             String ex = writeRequest.getImage().getOriginalFilename().substring(idx + 1);
 
             if(!(ex.contains("jpg") || ex.contains("png") || ex.contains("jpeg") || ex.contains("gif")))
-                throw new RuntimeException();
+                throw new BadExRequestException();
 
             String imageName = UUID.randomUUID().toString() + "." + ex;
 
@@ -125,13 +128,13 @@ public class CRUDServiceImpl implements CRUDService {
     @Override
     public void updateCRUD(String token, Long crudId, UpdateRequest updateRequest) {
         User user = userRepository.findByUserId(jwtProvider.getUserId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         if(user.getAuthority() != Authority.ADMIN)
-            throw new RuntimeException();
+            throw new UserNotHaveAuthorityException();
 
         CRUD crud = crudRepository.findByListId(crudId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CRUDNotFoundException::new);
 
         setIfNotNull(crud::setTitle, updateRequest.getTitle());
         setIfNotNull(crud::setContent, updateRequest.getContent());
@@ -143,13 +146,13 @@ public class CRUDServiceImpl implements CRUDService {
     @Override
     public void updateCRUDImage(String token, Long crudId, MultipartFile image) {
         User user = userRepository.findByUserId(jwtProvider.getUserId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         if(user.getAuthority() != Authority.ADMIN)
-            throw new RuntimeException();
+            throw new UserNotHaveAuthorityException();
 
         CRUDImage crudImage = crudImageRepository.findByListId(crudId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CRUDImageNotFoundException::new);
 
         File file = new File(imageDir, crudImage.getImageName());
 
@@ -159,13 +162,13 @@ public class CRUDServiceImpl implements CRUDService {
             crudImage.updateImageName("");
         }else {
             if(image.getOriginalFilename() == null || image.getOriginalFilename().length() == 0)
-                throw new RuntimeException();
+                throw new BadHttpRequest();
 
             int idx = image.getOriginalFilename().indexOf(".");
             String ex = image.getOriginalFilename().substring(idx + 1);
 
             if(!(ex.contains("jpg") || ex.contains("png") || ex.contains("jpeg") || ex.contains("gif")))
-                throw new RuntimeException();
+                throw new BadExRequestException();
 
             String imageName = UUID.randomUUID().toString() + "." + ex;
 
@@ -180,16 +183,16 @@ public class CRUDServiceImpl implements CRUDService {
     @Override
     public void deleteCRUD(String token, Long crudId) {
         User user = userRepository.findByUserId(jwtProvider.getUserId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         if(user.getAuthority() != Authority.ADMIN)
             throw new RuntimeException();
 
         CRUD crud = crudRepository.findByListId(crudId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CRUDNotFoundException::new);
 
         CRUDImage crudImage = crudImageRepository.findByListId(crud.getListId())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CRUDImageNotFoundException::new);
 
         File file = new File(imageDir, crudImage.getImageName());
 
@@ -203,10 +206,10 @@ public class CRUDServiceImpl implements CRUDService {
     @Override
     public byte[] getImage(String imageName) {
         crudImageRepository.findByImageName(imageName)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CRUDImageNotFoundException::new);
 
         File file = new File(imageDir, imageName);
-        if(!file.exists()) throw new RuntimeException();
+        if(!file.exists()) throw new CRUDImageNotFoundException();
 
         InputStream inputStream = new FileInputStream(file);
 

@@ -1,6 +1,8 @@
 package com.example.jabits_homework.jwt;
 
 import com.example.jabits_homework.entity.token.repository.TokenRepository;
+import com.example.jabits_homework.error.exceptions.InvalidTokenException;
+import com.example.jabits_homework.error.exceptions.IsNotRefreshTokenException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +59,7 @@ public class JwtProvider {
     public boolean isRefreshToken(String token) {
         if (validateToken(token)) {
             tokenRepository.deleteByRefreshToken(token);
-            throw new RuntimeException();
+            throw new IsNotRefreshTokenException();
         }
 
         return Jwts.parser().setSigningKey(secretKey)
@@ -67,7 +69,7 @@ public class JwtProvider {
     public Integer getUserId(String token) {
         System.out.println(token);
         if(!validateToken(token))
-            throw new RuntimeException();
+            throw new InvalidTokenException();
 
         return Integer.parseInt(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject());
     }

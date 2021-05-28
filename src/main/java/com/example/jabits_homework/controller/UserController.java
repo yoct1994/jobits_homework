@@ -20,6 +20,7 @@ public class UserController {
         userService.signUp(signUpRequest);
     }
 
+    //기능 테스트를 위해 넣은 어드민 계정 만들기
     @PostMapping("/api/make")
     public void makeAdmin() {
         userService.makeAdmin();
